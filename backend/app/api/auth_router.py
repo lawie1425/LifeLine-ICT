@@ -19,11 +19,13 @@ def get_auth_service(session: AsyncSession = Depends(get_session)) -> AuthServic
     return AuthService(user_repository)
 
 
-@router.post("/token")
+@router.post("/token", status_code=status.HTTP_200_OK)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(get_auth_service),
 ) -> dict[str, str]:
+    """Exchange credentials for an access token."""
+
     user = await auth_service.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -38,10 +40,12 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/users")
+@router.post("/users", status_code=status.HTTP_201_CREATED)
 async def create_user(
     form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(get_auth_service),
 ) -> dict[str, str]:
+    """Create a new user account."""
+
     user = await auth_service.create_user(form_data.username, form_data.password)
     return {"username": user.username}

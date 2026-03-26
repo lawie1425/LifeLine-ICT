@@ -6,12 +6,19 @@ from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
 
+from ..core.config import settings
 from ..models.user import User
 from ..repositories.user_repository import UserRepository
 
-SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+SECRET_KEY = settings.jwt_secret_key
+if not SECRET_KEY or SECRET_KEY == "your-secret-key":
+    # Ensure there is a production-grade secret in environment
+    raise ValueError(
+        "LIFELINE_JWT_SECRET_KEY must be set to a non-default value for security."
+    )
 
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
