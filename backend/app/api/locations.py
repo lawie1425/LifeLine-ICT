@@ -86,14 +86,14 @@ async def create_location(
 )
 async def update_location(
     location_id: int,
-    payload: LocationCreate,
+    payload: LocationUpdate,
     service: LocationService = Depends(get_location_service),
 ) -> LocationRead:
     """
     Replace an existing location.
     """
 
-    return await service.update_location(location_id, LocationUpdate(**payload.dict()))
+    return await service.update_location(location_id, payload)
 
 
 @router.patch(

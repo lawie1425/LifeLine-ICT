@@ -70,6 +70,10 @@ class Settings:
         "LIFELINE_PAGINATION_MAX_LIMIT",
         100,
     )
+    jwt_secret_key: str = os.getenv(
+        "LIFELINE_JWT_SECRET_KEY",
+        "your-secret-key",
+    )
 
 
 settings = Settings()
